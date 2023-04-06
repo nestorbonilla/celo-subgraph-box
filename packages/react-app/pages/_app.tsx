@@ -21,6 +21,8 @@ import { Alfajores, Celo } from "@celo/rainbowkit-celo/chains";
 
 import Layout from "../components/Layout";
 
+import { createClient as createClientUrql, cacheExchange, fetchExchange, Provider } from "urql";
+
 const { chains, provider } = configureChains(
   [Alfajores, Celo],
   [jsonRpcProvider({ rpc: (chain) => ({ http: chain.rpcUrls.default.http[0] }) })]  
@@ -46,13 +48,22 @@ const wagmiClient = createClient({
   provider,
 });
 
+const APIURL = "https://api.studio.thegraph.com/query/44718/celo-subgraph-box/v1.0.7";
+
+const client = createClientUrql({
+  url: APIURL,
+  exchanges: [ cacheExchange, fetchExchange ]
+});
+
 function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} coolMode={true}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Provider value={client}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </Provider>
       </RainbowKitProvider>
     </WagmiConfig>
   )
