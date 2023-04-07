@@ -15,7 +15,7 @@ export default function Home() {
         (skip==0) ? setSkip(first) : setSkip(skip + first);
         break;
       case "backward":
-        setSkip(skip - first);
+        (skip==0) ? setSkip(0) : setSkip(skip - first);
         break;
       default:
         console.log("check direction data...");
@@ -73,12 +73,17 @@ export default function Home() {
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-forest py-5">Celo Boxes</h2>   
+      <h2 className="text-3xl font-bold text-onyx p-4 ">Celo Boxes</h2>   
       <ul role="list" className="grid grid-cols-2 mx-4 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
         {data.tokens.map((token: Token) => (
           <li key={token.tokenID} className="relative">
             <div className="group aspect-h-10 aspect-w-10 block w-full overflow-hidden bg-gray-100 focus-within:ring-2 focus-within:ring-forest focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-              <Image src={token.ipfsURI.image} alt="" className="pointer-events-none object-cover group-hover:opacity-75" />
+              <Image src={`${token.ipfsURI.image}?w=1000&q=75`}
+                alt={token.ipfsURI.name}
+                className="pointer-events-none object-cover group-hover:opacity-75"
+                width={1000}
+                height={1000}
+              />
               <button type="button" className="absolute inset-0 focus:outline-none">
                 <span className="sr-only">View details for {token.ipfsURI.name}</span>
               </button>
@@ -87,7 +92,7 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <div className="flex items-center justify-between border-t border-onyx px-4 my-10 py-3 sm:px-6">
+      <div className="flex items-center justify-between border-t border-onyx px-4 my-10 py-3">
         <div className="flex flex-1 justify-between sm:hidden">
           <a
             onClick={() => {
