@@ -1,6 +1,7 @@
 import { gql, useQuery } from "urql";
 import { useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
+import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 
 export default function Home() {
@@ -44,6 +45,24 @@ export default function Home() {
     }
   `;
 
+  type Token = {
+    id: string;
+    tokenID: string;
+    tokenURI: string;
+    ipfsURI: {
+      id: string;
+      description: string;
+      image: string;
+      lowerLeft: string;
+      lowerRight: string;
+      name: string;
+      randomNumber: Number;
+      randomWord: string;
+      upperLeft: string;
+      upperRight: string;
+    }
+  }
+
   const [result, reexecuteQuery] = useQuery({
     query: graphQuery,
     variables: { first, skip }
@@ -56,10 +75,10 @@ export default function Home() {
     <div>
       <h2 className="text-3xl font-bold text-forest py-5">Celo Boxes</h2>   
       <ul role="list" className="grid grid-cols-2 mx-4 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-        {data.tokens.map((token) => (
+        {data.tokens.map((token: Token) => (
           <li key={token.tokenID} className="relative">
             <div className="group aspect-h-10 aspect-w-10 block w-full overflow-hidden bg-gray-100 focus-within:ring-2 focus-within:ring-forest focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-              <img src={token.ipfsURI.image} alt="" className="pointer-events-none object-cover group-hover:opacity-75" />
+              <Image src={token.ipfsURI.image} alt="" className="pointer-events-none object-cover group-hover:opacity-75" />
               <button type="button" className="absolute inset-0 focus:outline-none">
                 <span className="sr-only">View details for {token.ipfsURI.name}</span>
               </button>
